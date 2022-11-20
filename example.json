@@ -1,0 +1,39 @@
+{
+  "builders": [
+    {
+      "type": "openstack",
+      "ssh_username": "debian",
+      "image_name": "debian11-docker",
+      "source_image": "1c9d87a8-1673-4843-92d7-99bc6e511f0d",
+      "security_groups": [ "default", "ssh" ],
+      "flavor": "2v2g20g",
+      "networks": "1eca412d-c87a-4947-a223-74b0ee1149bb",
+      "insecure": "true",
+      "floating_ip_pool": "235-net",
+      "use_floating_ip": "true"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 5"
+      ]
+    },
+    { "type": "file",
+      "source": "install-docker.sh",
+      "destination": "/tmp/install-docker.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo /bin/bash /tmp/install-docker.sh"
+      ]
+    }
+  ],
+  "post-processors": [{
+    "strip_path": true,
+    "output": "packer-example-result.log",
+    "type": "manifest"
+  }]
+}
